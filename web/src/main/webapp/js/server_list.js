@@ -346,8 +346,9 @@ function stopServer(serviceId) {
  * @param {String} stopScriptPath  停止脚本
  * @param {String} monitorScriptPath  监控脚本
  * @param {String} profile  私有模板
+ * @param {String} gridflag 流量状态
  */
-function updateServer(serviceId,serverNmae,nodeName,isBak,templateName,serverType,enableSet,setName,setArea,setGroup,asyncThreadNum,basePath,exePath,startScriptPath,stopScriptPath,monitorScriptPath) {
+function updateServer(serviceId,serverNmae,nodeName,isBak,templateName,serverType,enableSet,setName,setArea,setGroup,asyncThreadNum,basePath,exePath,startScriptPath,stopScriptPath,monitorScriptPath,gridflag) {
     var $box = $('#dlg-update-service');
     $box.find('#u-service-name').html(serverNmae);
     $box.find('#u-node-name').html(nodeName);
@@ -363,6 +364,7 @@ function updateServer(serviceId,serverNmae,nodeName,isBak,templateName,serverTyp
     $box.find('#u-start-path').val(startScriptPath);
     $box.find('#u-stop-path').val(stopScriptPath);
     $box.find('#u-monitor-path').val(monitorScriptPath);
+    $box.find('#u-grid_flag').val(gridflag);
     if(enableSet=='true'){
         $('.set-control').removeAttr('disabled');
     }else{
@@ -395,7 +397,8 @@ function updateServer(serviceId,serverNmae,nodeName,isBak,templateName,serverTyp
                 start_script_path:  $.trim($box.find('#u-start-path').val()),
                 stop_script_path:   $.trim($box.find('#u-stop-path').val()),
                 monitor_script_path: $.trim($box.find('#u-monitor-path').val()),
-                profile         :   $.trim($box.find('#u-profile').val())
+                profile         :   $.trim($box.find('#u-profile').val()),
+                gridflag      :   $.trim($box.find('#u-grid_flag').val())
             },
             self = this,
             regPath = /^\/?([a-zA-Z0-9_.-]+\/)+[a-zA-Z0-9_.-]+?$/i;
@@ -412,8 +415,8 @@ function updateServer(serviceId,serverNmae,nodeName,isBak,templateName,serverTyp
                     showErrorMsg($box,'Set区域只能为英文字母，且必须小写');
                     return;
                 }
-                if(!/^(\d+|\*)$/.test(paramObj.set_group)){
-                    showErrorMsg($box,'Set组必须为数字或*号');
+                if(!/^([a-z]+|\d+|\*)$/.test(paramObj.set_group)){
+                    showErrorMsg($box,'Set组必须为数字或*号或英文字母，且必须小写');
                     return;
                 }
             }else{

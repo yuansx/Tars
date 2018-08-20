@@ -37,20 +37,10 @@ import java.util.ArrayList;
 
 public class XmlAppContext extends BaseAppContext {
     public XmlAppContext() {
-        try {
-            initFromConfigFile();
-            injectAdminServant();
-            initServants();
-            appContextStarted();
-            setAppContext();
-            System.out.println("[SERVER] The application started successfully.  {appname=}");
-        } catch (Exception ex) {
-            ready = false;
-            System.out.println("[SERVER] failed to start the applicaton. {appname=}");
-        }
     }
 
-    private void initFromConfigFile() throws Exception {
+    @Override
+    protected void loadServants() throws Exception {
         XMLConfigFile cfg = new XMLConfigFile();
         cfg.parse(getClass().getClassLoader().getResource("servants.xml").openStream());
         XMLConfigElement root = cfg.getRootElement();
@@ -61,6 +51,11 @@ public class XmlAppContext extends BaseAppContext {
         loadAppContextListeners(elements);
 
         loadAppServants(elements);
+        
+        loadDefaultFilter();
+        
+        loadAppFilters(elements);
+        
     }
 
     private void loadInitParams(ArrayList<XMLConfigElement> list) {
@@ -90,6 +85,9 @@ public class XmlAppContext extends BaseAppContext {
                 }
             }
         }
+    }
+    private void loadAppFilters(ArrayList<XMLConfigElement> list) {
+    	
     }
 
     private void loadAppServants(ArrayList<XMLConfigElement> elements) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
